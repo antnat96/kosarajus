@@ -1,12 +1,21 @@
 # Author: Anthony Natale
 # Date: October 2022
 # Assignment 3, Design and Analysis of Algorithms, ECU
-# TODO: Remove!
+# Instructions:
+# 1. Enter 'python main.py' to start the program.
+# 2. When prompted to input, paste your graph representation and hit enter TWICE.
+# 3. If this fails due to incorrect input formatting, you may enter 'python main.py -f {file_name}' to read from a file.
+
+
 # Notes: Your program runs correctly for most test cases, though it failed to produce the correct output for my "scc4"
 # test case (-12).
 # Also, the output contains parallel edges (-5).
 # Your implementation appears to run using the correct time complexity.
+
+
 import sys
+import fileinput
+import argparse
 
 
 class Stack:
@@ -23,49 +32,75 @@ class Stack:
         return self.items.pop()
 
     def has_elements(self):
-        if self.size > 0:
-            return True
-        else:
-            return False
+        return self.size > 0
 
     def rev(self):
         self.items.reverse()
 
-    def get_items(self):
-        return self.items
-
-    def clear(self):
-        self.items = []
-        self.size = 0
-
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f')
+    args = parser.parse_args()
+    filename = args.f
 
-    fname = sys.argv[1]
-    if ".txt" not in fname:
-        fname = fname + ".txt"
-    while True:
-        try:
-            inp = open(fname, "r")
-            break
-        except IOError as e:
-            print("Please ensure that you are entering the file name properly")
-            fname = raw_input("Try entering the file name again now:")
-            if ".txt" not in fname:
-                fname = fname + ".txt"
-    line = inp.readline()
-    # Build graph information list
-    graph_info = []
-    while line:
-        if "\n" in line:
-            line = line.replace("\n", "")
-        graph_info.append(line.strip())
-        line = inp.readline()
-    n = int(graph_info.pop(0))
-    e = int(graph_info.pop(0))
     edges = []
-    for x in graph_info:
-        edges.append([int(x.split(" ")[0]), int(x.split(" ")[1])])
+    n = None
+    e = None
+
+    if filename is None:
+        print('Enter your graph representation and press Ctrl+D')
+        while True:
+            try:
+                line = raw_input()
+                if line is None or line == "":
+                    raise EOFError
+                if "\n" in line:
+                    line = line.replace("\n", "")
+                # First line is number of vertices
+                if n is None:
+                    n = int(line)
+                # Second line is number of edges
+                elif e is None:
+                    e = int(line)
+                else:
+                    stripped_line = line.strip()
+                    edge_1 = int(stripped_line.split(" ")[0])
+                    edge_2 = int(stripped_line.split(" ")[1])
+                    edges.append([edge_1, edge_2])
+            except EOFError:
+                break
+
+    else:
+        while True:
+            try:
+                inp = open(filename, "r")
+                line = inp.readline()
+                try:
+                    while line is not None and line != "":
+                        if "\n" in line:
+                            line = line.replace("\n", "")
+                        # First line is number of vertices
+                        if n is None:
+                            n = int(line)
+                        # Second line is number of edges
+                        elif e is None:
+                            e = int(line)
+                        else:
+                            stripped_line = line.strip()
+                            edge_1 = int(stripped_line.split(" ")[0])
+                            edge_2 = int(stripped_line.split(" ")[1])
+                            edges.append([edge_1, edge_2])
+                        line = inp.readline()
+                except EOFError:
+                    break
+                break
+            except IOError as e:
+                print("Please ensure that you are entering the file name properly")
+
+    print(n)
+    print(e)
+    print(edges)
 
     # My test cases
     # Test_1
@@ -92,7 +127,6 @@ def main():
         adj_list.append([])
     for x in edges:
         adj_list[x[0]].append(x[1])
-    orig_adj_list = adj_list
 
     # Initialize the stack to record post order traversal
     post_order = Stack()
