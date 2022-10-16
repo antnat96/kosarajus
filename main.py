@@ -1,16 +1,46 @@
 # Author: Anthony Natale
-# Date: August 2020
-# Purpose: Assignment 3, Design and Analysis of Algorithms, ECU
-# Description:
-# Commands:
-# Special Notes:
-# ! /usr/bin/env python
+# Date: October 2022
+# Assignment 3, Design and Analysis of Algorithms, ECU
+# TODO: Remove!
+# Notes: Your program runs correctly for most test cases, though it failed to produce the correct output for my "scc4"
+# test case (-12).
+# Also, the output contains parallel edges (-5).
+# Your implementation appears to run using the correct time complexity.
 import sys
+
+
+class Stack:
+    def __init__(self):
+        self.items = []
+        self.size = 0
+
+    def push(self, item=None):
+        self.items.append(item)
+        self.size = self.size + 1
+
+    def pop(self):
+        self.size = self.size - 1
+        return self.items.pop()
+
+    def has_elements(self):
+        if self.size > 0:
+            return True
+        else:
+            return False
+
+    def rev(self):
+        self.items.reverse()
+
+    def get_items(self):
+        return self.items
+
+    def clear(self):
+        self.items = []
+        self.size = 0
 
 
 def main():
 
-    # TODO: Take input in manner specified in Apogee's email
     fname = sys.argv[1]
     if ".txt" not in fname:
         fname = fname + ".txt"
@@ -164,40 +194,5 @@ def construct_kernel(scc, edges):
     return
 
 
-class Stack:
-
-    def __init__(self):
-        self.items = []
-        self.size = 0
-
-    def push(self, item=None):
-        self.items.append(item)
-        self.size = self.size + 1
-
-    def pop(self):
-        self.size = self.size - 1
-        return self.items.pop(self.size)
-
-    def has_elements(self):
-        if self.size > 0:
-            return True
-        else:
-            return False
-
-    def rev(self):
-        self.items.reverse()
-
-    def get_items(self):
-        return self.items
-
-    def clear(self):
-        self.items = []
-        self.size = 0
-
-    def swap(self):
-        temp = self.items[self.size - 1]
-        self.items[self.size - 1] = self.items[0]
-        self.items[0] = temp
-
-
-main()
+if __name__ == '__main__':
+    main()
