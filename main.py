@@ -63,13 +63,12 @@ def main():
         print('You may be missing an edge or may have entered extra edges. Please check your input.')
 
     # Create graph representation and initialize visited list
-    adjacency_list = [[]] * n
-    reverse_adjacency_list = [[]] * n
+    adjacency_list = []
     visited = [False] * n
-    reverse_visited = [False] * n
+    for a in range(n):
+        adjacency_list.append([])
     for x in edges:
         adjacency_list[x[0]].append(x[1])
-        reverse_adjacency_list[x[1]].append(x[0])
 
     # Initialize the stack to record post order traversal
     post_order_stack = Stack()
