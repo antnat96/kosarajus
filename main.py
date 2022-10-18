@@ -63,45 +63,39 @@ def main():
         print('You may be missing an edge or may have entered extra edges. Please check your input.')
 
     # Create graph representation and initialize visited list
-    adjacency_list = []
+    adjacency_list = [[]] * n
     visited = [False] * n
-    for a in range(n):
-        adjacency_list.append([])
-    for x in edges:
-        adjacency_list[x[0]].append(x[1])
+    for edge in edges:
+        adjacency_list[edge[0]].append(edge[1])
 
     # Initialize the stack to record post order traversal
     post_order_stack = Stack()
     post_order_stack.push(0)
 
-    # First DFS - Pushes vertices to the post_order stack as they (and their children) are done being explored
+    # Push vertices to the post_order stack as they (and their children) are done being explored
     dfs_build_post_order(post_order_stack.pop(), post_order_stack, adjacency_list, visited)
 
-    # TODO: Change the following to work without explicitly constructing the reverse graph
     # Reverse the graph
     for y in edges:
         y = y.reverse()
 
     # Create new graph representation and reinitialize visited list to all False
-    adjacency_list = []
+    reverse_adjacency_list = []
     visited = [False] * n
     for a in range(n):
-        adjacency_list.append([])
-    for x in edges:
-        adjacency_list[x[0]].append(x[1])
+        reverse_adjacency_list.append([])
+    for edge in edges:
+        reverse_adjacency_list[edge[0]].append(edge[1])
 
     # Initialize a list of SCCs
     scc = []
     # And a list describing the SCC currently being built by the DFS
     curr_scc = []
 
-    # Second DFS - Uses the reversed graph to identify the strongly connected components
-    # dfs_2(post_order.pop(), post_order, adj_list, visited, scc, curr_scc)
-
     while post_order_stack.has_elements() is True:
         v = post_order_stack.pop()
         if visited[v] is False:
-            dfs_2(v, post_order_stack, adjacency_list, visited, scc, curr_scc)
+            dfs_2(v, post_order_stack, reverse_adjacency_list, visited, scc, curr_scc)
             scc.append(curr_scc)
             curr_scc = []
 
@@ -109,7 +103,8 @@ def main():
     if len(scc) != n:
         print("There are " + str(len(scc)) + " Strongly Connected Components:")
         for x in range(len(scc)):
-            print x,
+            print "SCC",
+            print x + 1,
             print ":",
             for y in scc[x]:
                 print str(y),
@@ -150,7 +145,6 @@ def dfs_2(v, post_order, adj_list, visited, scc, curr_scc):
 
 def construct_kernel(scc, edges):
     outward_conn = []
-    outward_conn_scc = []
     # Look through each SCC
     for x in scc:
         # Look through each vertex in that SCC
@@ -162,10 +156,10 @@ def construct_kernel(scc, edges):
     for x in outward_conn:
         for y in range(len(scc)):
             if x[0] in scc[y]:
-                print "SCC " + str(y) + " has an outbound edge to SCC",
+                print "SCC " + str(y + 1) + " has an outbound edge to SCC",
         for y in range(len(scc)):
             if x[1] in scc[y]:
-                print str(y) + "\n by the connection from " + str(x[0]) + " to " + str(x[1]),
+                print str(y + 1) + "\n by the connection from " + str(x[0]) + " to " + str(x[1]),
         print("\n")
     return
 
