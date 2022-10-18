@@ -104,12 +104,12 @@ def main():
         print("There are " + str(len(scc)) + " Strongly Connected Components:")
         for x in range(len(scc)):
             print "SCC",
-            print x + 1,
+            print x,
             print ":",
             for y in scc[x]:
                 print str(y),
             print("\n")
-        print("Kernel Graph Adjacency List:")
+        print("Kernel Graph Adjacency List (SCC Connections):")
         construct_kernel(scc, edges)
 
     else:
@@ -143,25 +143,35 @@ def dfs_2(v, post_order, adj_list, visited, scc, curr_scc):
             dfs_2(u, post_order, adj_list, visited, scc, curr_scc)
 
 
-def construct_kernel(scc, edges):
-    outward_conn = []
+def construct_kernel(sccs, edges):
+    outward_connections = []
+
     # Look through each SCC
-    for x in scc:
+    for scc in sccs:
         # Look through each vertex in that SCC
-        for y in x:
-            # Identify a list of that vertex's relations with another SC
-            for z in edges:
-                if y is z[0] and z[1] not in x:
-                    outward_conn.append([z[0], z[1]])
-    for x in outward_conn:
-        for y in range(len(scc)):
-            if x[0] in scc[y]:
-                print "SCC " + str(y + 1) + " has an outbound edge to SCC",
-        for y in range(len(scc)):
-            if x[1] in scc[y]:
-                print str(y + 1) + "\n by the connection from " + str(x[0]) + " to " + str(x[1]),
-        print("\n")
-    return
+        for scc_vertex in scc:
+            # Identify a list of that vertex's relations with another SCC
+            for edge in edges:
+                if scc_vertex is edge[0] and edge[1] not in scc:
+                    outward_connections.append([edge[0], edge[1]])
+
+    unique_edges = []
+    # Display unique connections between SCCs
+    for outward_connection in outward_connections:
+        edge = []
+        for y in range(len(sccs)):
+            if outward_connection[1] in sccs[y]:
+                edge.append(y)
+            if outward_connection[0] in sccs[y]:
+                edge.append(y)
+            if len(edge) != 2:
+                continue
+            exists = any(unique_edge[0] == edge[0] and unique_edge[1] == edge[1] for unique_edge in unique_edges)
+            if exists is False:
+                unique_edges.append(edge)
+
+    for unique_edge in unique_edges:
+        print unique_edge[0], unique_edge[1], "\n"
 
 
 if __name__ == '__main__':
