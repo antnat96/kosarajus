@@ -1,16 +1,10 @@
 # Author: Anthony Natale
 # Date: October 2022
-# Assignment 3, Design and Analysis of Algorithms, ECU
+# CSCI 6410 Assignment 3
 # Instructions:
-# 1. Enter 'python main.py' to start the program.
-# 2. When prompted to input, paste your graph representation and hit enter TWICE.
-# 3. If this fails due to incorrect input formatting, you may enter 'python main.py -f {file_name}' to read from a file.
-
-
-# Notes: Your program runs correctly for most test cases, though it failed to produce the correct output for my "scc4"
-# test case (-12).
-# Also, the output contains parallel edges (-5).
-# Your implementation appears to run using the correct time complexity.
+# 1. Run 'python main.py' without the quotes.
+# 2. When prompted to input, paste the entire graph representation OR enter it line by line, and when finished hit
+#    enter TWICE to create an empty line. The program recognizes an empty line as the end of the input.
 
 class Stack:
     def __init__(self):
@@ -36,7 +30,7 @@ def main():
     edges = []
     n = None
     e = None
-    print('Enter the graph representation. When you are finished, enter an empty line and the program will proces '
+    print('Enter the graph representation. When you are finished, enter an empty line and the program will process '
           'your input')
     while True:
         try:
